@@ -98,23 +98,8 @@ async def userLogin():
                 'error': error
               })
 
-async def userProfile(id):
-  try:
-      data = await getUserById(id)
-      return jsonify({
-                'responseCode': 200,
-                'message': 'Success',
-                'data': data
-              })
-  except Exception as error:
-    print("An exception occurred:", type(error).__name__)
-    return jsonify({
-                'responseCode': 500,
-                'message': 'Network Error',
-                'error': error
-              })
 @user_required
-async def tesUser(id):
+async def userProfile(id):
   try:
       data = await userProfileTes(id)
 

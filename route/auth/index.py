@@ -9,8 +9,8 @@ import jwt
 
 userblueprint = Blueprint('blueprint', __name__)
 
-userblueprint.route('/', methods=['GET'])(userFetch)
+# userblueprint.route('/', methods=['GET'])(userFetch)
 # userblueprint.route('/<id>', methods=['GET'])(userProfile)
-userblueprint.route('/<id>', methods=['GET'])(tesUser)
+userblueprint.route('/', methods=['GET'])(userProfile)
 userblueprint.route('/registration', methods=['POST'])(userRegistration)
 userblueprint.route('/login', methods=['POST'])(userLogin)
