@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator db {
+  provider             = "prisma-client-py"
+  interface            = "asyncio"
+  recursive_type_depth = 5
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String?
+  address  String?
+  password String?
+  role     String?
+  posts    Post[]
+  follows  Follow[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(true)
+  title     String   @db.VarChar(255)
+  authorId  Int
+  author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Follow {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  idSelf    Int
+  idOther   Int
+  idProfile User?    @relation(fields: [idSelf], references: [id], onDelete: Cascade)
+}
