@@ -11,7 +11,6 @@ async def getAllPost():
     return toJson
 
 async def getAllPostById(id):
-    print('id', id)
     db = Prisma(auto_register=True)
     await db.connect()
 
