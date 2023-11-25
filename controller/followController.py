@@ -24,21 +24,41 @@ async def createFollower(id):
 
 
   try:
-    checkOther = await checkIsIDExist(id, int(idOther))
-    if checkOther:
+    # checkOther = await checkIsIDExist(id, int(idOther))
+    # return jsonify({
+    #                 'responseCode': 404,
+    #                 'message': 'Already followed',
+    #               }),404    
+    # print(type(checkOther))
+    # if checkOther:
+    #   return jsonify({
+    #             'responseCode': 404,
+    #             'message': 'Already followed',
+    #           }),404
+    # else:
+
+      data = await addFollower(id, int(idOther))
       return jsonify({
-                      'responseCode': 404,
-                      'message': 'Already followed',
-                    }),404
-    
-    data = await addFollower(id, int(idOther))
-    return jsonify({
                     'responseCode': 200,
                     'message': 'Success',
                   }),200
+    # else:
+
+    # else:
+    # data = await addFollower(id, int(idOther))
+    # return jsonify({
+    #                 'responseCode': 200,
+    #                 'message': 'Success',
+    #               }),200
+    #   data = await addFollower(id, int(idOther))
+    #   return jsonify({
+    #                   'responseCode': 200,
+    #                   'message': 'Success',
+    #                 }),200
   
   except Exception as error:
-    print("An exception occurred:", type(error).__name__)
+    # print("An exception occurred:", type(error).__name__)
+    print(error)
     return jsonify({
               'responseCode': 500,
               'message': 'Network Error',

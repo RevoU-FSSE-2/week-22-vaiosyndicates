@@ -16,6 +16,6 @@ load_dotenv(find_dotenv())
 SECRET_KEY = os.environ.get("SECRET")
 
 
-app.register_blueprint(userblueprint, url_prefix='/user')
-app.register_blueprint(postblueprint, url_prefix='/post')
-app.register_blueprint(followblueprint, url_prefix='/follow')
+app.register_blueprint(userblueprint, url_prefix='/api/user')
+app.register_blueprint(postblueprint, url_prefix='/api/post')
+app.register_blueprint(followblueprint, url_prefix='/api/follow')

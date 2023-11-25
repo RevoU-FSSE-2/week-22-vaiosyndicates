@@ -44,13 +44,12 @@ async def fetchPost(id):
               })
 
 @user_required
-async def addPost():
+async def addPost(id):
   data = request.json
   title = data.get('title')
-  idUser = data.get('idUser')
 
   try:
-    data = await createPost(title, int(idUser))
+    data = await createPost(title, id)
     print(data)
     return jsonify({
                     'responseCode': 200,
