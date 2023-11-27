@@ -1,15 +1,10 @@
-import os
-import bcrypt
-import jwt
-from dotenv import load_dotenv, find_dotenv
 from flask import request, jsonify
+from marshmallow import Schema, fields, ValidationError, validate, validates
 from model.userModel import *
 from middleware.auth_middleware import *
+from util.index import *
 
-#load .env
-load_dotenv(find_dotenv())
-#get secret key
-SECRET_KEY = os.environ.get("SECRET")
+
 
 async def userFetch():
   try:
@@ -26,98 +21,90 @@ async def userFetch():
                 'data': data
               })
 
+class UserRegistrationSchema(Schema):
+    name = fields.String(required=True, validate=validate.Length(min=3))
+    email = fields.Email(required=True)
+    address = fields.String(required=False)
+    password = fields.String(required=True, validate=validate.Length(min=5), load_only=True)
+    role = fields.String(required=True)
 async def userRegistration():
   data = request.json
-  name = data.get('name')
-  email = data.get('email')
-  address = data.get('address')
-  password = data.get('password')
-  role = data.get('role')
-
-  #hashing pw
-  bytes = password.encode('utf-8')
-  salt = bcrypt.gensalt()
-  hash = bcrypt.hashpw(bytes, salt).decode("utf-8") 
+  schema = UserRegistrationSchema()
 
   try:
-    await registerUser(name, email, address, hash, role)
-    return jsonify({
-                    'responseCode': 200,
-                    'message': 'Success'
-                  })
-  except Exception as error:
-    print("An exception occurred:", type(error).__name__)
-    return jsonify({
-                'responseCode': 500,
-                'message': 'Network Error',
-                'error': error
-              })
+
+    data = schema.load(data)
+    pw = hash_password(data['password'])
+    data['password'] = pw
+
+    try:
+      await registerUser(data['name'], data['email'], data['address'], data['password'], data['role'])
+      return jsonify({
+            'responseCode': 200,
+            'message': 'Success'
+          })
+
+    except Exception as error:
+      print(error)
+      return jsonify({
+            'responseCode': 500,
+            'message': 'Error'
+          }),500
+
+  except ValidationError as err:
+      return {"error": err.messages}, 400
   
+
+class UserLoginSchema(Schema):
+    email = fields.Email(required=True)
+    password = fields.String(required=True, validate=validate.Length(min=5), load_only=True)
 async def userLogin():
   data = request.json
-  email = data.get('email')
-  password = data.get('password')
-
-  #encode pw
-  bytes = password.encode('utf-8')
+  schema = UserLoginSchema()
 
   try:
-    user = await getUserByEmail(email)
 
-    if len(user) > 0:
-      user_payload = {
-        "name": user['name'],
-        "email": user['email'],
-        "address": user['address'],
-        "role": user['role']
-      }
-      if bcrypt.checkpw(bytes, user['password'].encode('utf-8')):
-        encoded_jwt = jwt.encode({'name': user['name'], 'email': user['email'], 'role': user['role'], 'id': user['id']}, SECRET_KEY)
-        return jsonify({
-                        'responseCode': 200,
-                        'message': 'Success',
-                        'data': user_payload,
-                        'token': encoded_jwt
-                      })
-      
-      else:
-        return jsonify({
-                        'responseCode': 404,
-                        'message': 'Wrong password'
-                      }),404
-    else:
-      return jsonify({
-                'responseCode': 404,
-                'message': 'User not found'
-              })
-  except Exception as error:
-    print("An exception occurred:", type(error).__name__)
-    return jsonify({
-                'responseCode': 500,
-                'message': 'Network Error',
-                'error': error
-              })
-
-@user_required
-async def userProfile(id):
-  try:
-      data = await userProfileTes(id)
-
-      data.pop('password')
-      follows = data['follows']
-      data['totalFollowing'] = len(follows)
-
-      return jsonify({
+    data = schema.load(data)
+    # print(data)
+    try:
+      user = await getUserByEmail(data['email'])
+      if len(user) > 0:
+        if(user['isApprove'] == True):
+          # print(user)
+          checkPW = check_password(data['password'], user['password'])
+          if checkPW == False:
+            return jsonify({
+              'responseCode': 404,
+              'message': 'Wrong password'
+            }),404
+          else:
+            user.pop('password')
+            user.pop('isApprove')
+            return jsonify({
                 'responseCode': 200,
                 'message': 'Success',
-                'data': data
-              })
-  except Exception as error:
-    print("An exception occurred:", type(error).__name__)
-    return jsonify({
-                'responseCode': 500,
-                'message': 'Network Error',
-                'error': error
-              }) 
+                'data': user,
+                'token': generateToken(user['id'], user['name'], user['email'], user['role'])
+              }),200
 
+        else:
+          return jsonify({
+            'responseCode': 404,
+            'message': 'User not approved'
+          }),200
+      else:
+        return jsonify({
+            'responseCode': 404,
+            'message': 'User not found'
+          }),200
+
+    except Exception as error:
+      print(error)
+      return jsonify({
+            'responseCode': 500,
+            'message': 'Error'
+          }),500
+
+  except ValidationError as err:
+      return {"error": err.messages}, 400
 

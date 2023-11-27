@@ -11,6 +11,5 @@ userblueprint = Blueprint('blueprint', __name__)
 
 # userblueprint.route('/', methods=['GET'])(userFetch)
 # userblueprint.route('/<id>', methods=['GET'])(userProfile)
-userblueprint.route('/', methods=['GET'])(userProfile)
 userblueprint.route('/registration', methods=['POST'])(userRegistration)
 userblueprint.route('/login', methods=['POST'])(userLogin)
