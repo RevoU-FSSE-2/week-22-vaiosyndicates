@@ -5,22 +5,6 @@ from middleware.auth_middleware import *
 from util.index import *
 
 
-
-async def userFetch():
-  try:
-    data = await getUserAll()
-    return jsonify({
-                    'responseCode': 200,
-                    'message': 'Success',
-                    'data': data
-                  })
-  except:
-    return jsonify({
-                'responseCode': 500,
-                'message': 'Network Error',
-                'data': data
-              })
-
 class UserRegistrationSchema(Schema):
     name = fields.String(required=True, validate=validate.Length(min=3))
     email = fields.Email(required=True)
