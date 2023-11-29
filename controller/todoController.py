@@ -23,9 +23,8 @@ async def fetchTodoById(id):
 
 class TodoAddSchema(Schema):
     
-    title = fields.String(required=True, validate=validate.Length(min=3))
     task = fields.String(required=True, validate=validate.Length(min=3))
-    priority = fields.String(required=True, validate=validate.Length(min=1))
+    time = fields.String(required=True, validate=validate.Length(min=3))
 
 @user_required
 async def insertTodo(id):
@@ -38,7 +37,7 @@ async def insertTodo(id):
     try:
       data = schema.load(data)
 
-      await createTodo(data['title'], data['task'], data['priority'], id)
+      await createTodo(data['task'], data['time'], id)
       return jsonify({
             'responseCode': 200,
             'message': 'Success'
@@ -60,9 +59,8 @@ async def insertTodo(id):
   
 class TodoUpdateSchema(Schema):
     idArticle =  fields.String(required=True, validate=validate.Length(min=1)) 
-    title = fields.String(required=True, validate=validate.Length(min=3))
     task = fields.String(required=True, validate=validate.Length(min=3))
-    priority = fields.String(required=True, validate=validate.Length(min=1))
+    time = fields.String(required=True, validate=validate.Length(min=3))
 @user_required
 async def editTodo(id):
   data = request.json
@@ -72,11 +70,10 @@ async def editTodo(id):
     data = schema.load(data)
 
     try:
-      data = schema.load(data)
       checkTodos = await checkTodo(int(data['idArticle']), id)
 
       if len(checkTodos) > 0:
-          await updateTodo(int(data['idArticle']), data['title'], data['task'], data['priority'], id)
+          await updateTodo(int(data['idArticle']), data['task'], data['time'], id)
           return jsonify({
             'responseCode': 200,
             'message': 'Success'

@@ -10,11 +10,11 @@ async def getAllTodoById(id):
     await prisma.disconnect()
     return toJson
 
-async def createTodo(title, task, priority, authorId):
+async def createTodo(task, time, authorId):
     prisma = Prisma()
     await prisma.connect()
 
-    todo = await prisma.todo.create(data={'title': title, 'task': task, 'priority': priority, 'authorId': authorId})
+    todo = await prisma.todo.create(data={ 'task': task, 'time': time, 'authorId': authorId})
     await prisma.disconnect()
 
     return todo
@@ -45,11 +45,11 @@ async def checkTodo(idTodo, id):
     else:
         return {}
 
-async def updateTodo(idTodo, title, task, priority, authorId):
+async def updateTodo(idTodo, task, time, authorId):
     prisma = Prisma()
     await prisma.connect()
 
-    todo = await prisma.todo.update(where={'id': idTodo}, data={'title': title, 'task': task, 'priority': priority, 'authorId': authorId})
+    todo = await prisma.todo.update(where={'id': idTodo}, data={'task': task, 'time': time, 'authorId': authorId})
     await prisma.disconnect()
 
     return todo

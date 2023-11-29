@@ -8,7 +8,7 @@ import os
 
 
 app = Flask("__name__")
-CORS(app)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 #load .env
 load_dotenv(find_dotenv())
