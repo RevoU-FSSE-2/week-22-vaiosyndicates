@@ -4,7 +4,7 @@ async def getUsers():
     prisma = Prisma()
     await prisma.connect()
 
-    users = await prisma.user.find_many(where={'role': 'user'})
+    users = await prisma.user.find_many(where={'role': 'USER'})
     await prisma.disconnect()
 
     toJson = [users.model_dump() for users in users]

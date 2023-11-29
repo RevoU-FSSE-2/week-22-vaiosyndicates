@@ -10,7 +10,6 @@ class UserRegistrationSchema(Schema):
     email = fields.Email(required=True)
     address = fields.String(required=False)
     password = fields.String(required=True, validate=validate.Length(min=5), load_only=True)
-    role = fields.String(required=True)
 async def userRegistration():
   data = request.json
   schema = UserRegistrationSchema()
@@ -22,7 +21,7 @@ async def userRegistration():
     data['password'] = pw
 
     try:
-      await registerUser(data['name'], data['email'], data['address'], data['password'], data['role'])
+      await registerUser(data['name'], data['email'], data['address'], data['password'])
       return jsonify({
             'responseCode': 200,
             'message': 'Success'

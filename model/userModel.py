@@ -3,11 +3,11 @@ from prisma.models import User
 import json
 
 
-async def registerUser(name, email, address, password, role):
+async def registerUser(name, email, address, password):
     prisma = Prisma()
     await prisma.connect()
 
-    user = await prisma.user.create(data={'name': name, 'email': email, 'address': address, 'password': password, 'role': role})
+    user = await prisma.user.create(data={'name': name, 'email': email, 'address': address, 'password': password })
     
     await prisma.disconnect()
     return user

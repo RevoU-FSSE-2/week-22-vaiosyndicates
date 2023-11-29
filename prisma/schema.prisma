@@ -20,7 +20,7 @@ model User {
   name      String?
   address   String?
   password  String?
-  role      String?
+  role      Role     @default(USER)
   isApprove Boolean  @default(false)
   todos     Todo[]
 }
@@ -35,4 +35,9 @@ model Todo {
   priority  String   @db.VarChar(255)
   authorId  Int
   author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  USER
+  ADMIN
 }

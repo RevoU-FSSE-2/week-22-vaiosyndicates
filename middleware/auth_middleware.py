@@ -37,7 +37,7 @@ def admin_required(fn):
             decoded_token = jwt.decode(cleanToken, os.getenv('SECRET'), algorithms="HS256")
             id = decoded_token.get("id")
             role = decoded_token.get("role")
-            if role == "admin":
+            if role == "ADMIN":
                 return current_app.ensure_sync(fn)(id, *args, **kwargs)
             else:
                 return {"error": "User access is required"}, 403
