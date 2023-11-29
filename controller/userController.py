@@ -58,9 +58,9 @@ async def userLogin():
           checkPW = check_password(data['password'], user['password'])
           if checkPW == False:
             return jsonify({
-              'responseCode': 404,
+              'responseCode': 400,
               'message': 'Wrong password'
-            }),404
+            }), 400
           else:
             user.pop('password')
             user.pop('isApprove')
@@ -69,18 +69,18 @@ async def userLogin():
                 'message': 'Success',
                 'data': user,
                 'token': generateToken(user['id'], user['name'], user['email'], user['role'])
-              }),200
+              }), 200
 
         else:
           return jsonify({
             'responseCode': 404,
             'message': 'User not approved'
-          }),200
+          }), 404
       else:
         return jsonify({
             'responseCode': 404,
             'message': 'User not found'
-          }),200
+          }), 404
 
     except Exception as error:
       print(error)
