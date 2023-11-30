@@ -10,14 +10,11 @@ APP
 - PyJWT
 - Prisma ORM
 - Flask CORS
+- Marshmallow
+- Gunicorn
 
 DB
 - PostgreSQL
-
-## AVAILABLE API
-- User (Registration, Login, Profile)
-- Post / Tweets (Get by id's profile, Create)
-- Follow (Add following, Remove following)
 
 ## LOCAL INSTALATION
 
@@ -44,6 +41,13 @@ Then install the dependencies
 pip install -r requirements.txt
 ```
 
+## API DOCUMENTATION
+You can check the API Documentation using Postman Published doc
+```
+https://documenter.getpostman.com/view/6901744/2s9YeHaqZj
+
+```
+
 ## DB MIGRATING
 Make sure the PostgreSQL is running and can be use
 And in your terminal using this command to create and migrate the database
@@ -52,8 +56,26 @@ prisma db push
 ```
 And all tables will be created automatically
 
+## DEPLOYMENT
+### BACK END
+For backend already deployed using Railway
+```
+week-22-vaiosyndicates-production.up.railway.app
+```
+### FRONT END
+For backend already deployed using Firebase Hosting
+```
+https://flask-todo.web.app/
+
+```
+
+You can check the repositories of the FE at
+```
+https://github.com/vaiosyndicates/todos-fe
+```
+
 ## DISCLAIMER
-This project fortunately doesn't have live deployment yet and still have many bugs to fix
-But i will attach the Postman collection, so you can make the api call
+This project still have many bugs to fix and will be fix soon
 
-
+[![Linkedin Badge](https://img.shields.io/badge/-Ade_Kresna_D-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/ade-kresna-dewantara/)
+[![Gmail Badge](https://img.shields.io/badge/-kresnafti2013@gmail.com-c14438?style=flat-square&logo=Gmail&logoColor=white)](mailto:kresnafti2013@gmail.com)
