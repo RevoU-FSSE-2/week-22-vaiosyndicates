@@ -19,3 +19,6 @@ SECRET_KEY = os.environ.get("SECRET")
 app.register_blueprint(userblueprint, url_prefix='/api/user')
 app.register_blueprint(todoblueprint, url_prefix='/api/todo')
 app.register_blueprint(adminblueprint, url_prefix='/api/admin')
+
+if __name__ == '__main__':
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
